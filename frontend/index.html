@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="description" content="AI-powered venomous snake identification — upload or photograph a snake to find out if it's dangerous." />
+  <title>Snake Vision — Venomous or Safe?</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🐍</span>
+        <span class="logo-text">Snake<strong>Vision</strong></span>
+      </div>
+      <span class="header-tag">AI Identifier</span>
+    </div>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────────────── -->
+  <section class="hero">
+    <h1 class="hero-title">Is this snake <span class="highlight">venomous?</span></h1>
+    <p class="hero-subtitle">
+      Snap or upload a photo of any snake — our deep-learning model identifies
+      whether it's venomous or safe in seconds.
+    </p>
+  </section>
+
+  <!-- ── Main card ──────────────────────────────────────────────── -->
+  <main class="main">
+    <div class="card" id="card">
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">📷</div>
+        <p class="upload-title">Drop a snake photo here</p>
+        <p class="upload-sub">or choose one of the options below</p>
+
+        <div class="btn-group">
+          <!-- File picker (gallery / files) -->
+          <label class="btn btn-primary" for="fileInput">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Choose Photo
+          </label>
+          <input type="file" id="fileInput" accept="image/*" hidden />
+
+          <!-- Camera button (mobile-focused) -->
+          <label class="btn btn-camera" for="cameraInput">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            Take Photo
+          </label>
+          <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden />
+        </div>
+
+        <p class="upload-hint">Supports JPG, PNG, WEBP · max 20 MB</p>
+      </div>
+
+      <!-- Preview zone (hidden until image selected) -->
+      <div class="preview-zone hidden" id="previewZone">
+        <div class="preview-img-wrap">
+          <img id="previewImg" alt="Snake photo preview" />
+          <button class="btn-close" id="clearBtn" aria-label="Clear image">✕</button>
+        </div>
+        <button class="btn btn-primary btn-analyse" id="analyseBtn">
+          <span class="btn-text">Analyse Snake</span>
+          <span class="spinner hidden" id="spinner"></span>
+        </button>
+      </div>
+
+      <!-- Result zone (hidden until prediction returned) -->
+      <div class="result-zone hidden" id="resultZone">
+        <div class="result-badge" id="resultBadge">
+          <span class="result-icon" id="resultIcon"></span>
+          <span class="result-label" id="resultLabel"></span>
+        </div>
+
+        <div class="confidence-bar-wrap">
+          <span class="conf-label">Confidence</span>
+          <div class="confidence-bar-bg">
+            <div class="confidence-bar-fill" id="confBar"></div>
+          </div>
+          <span class="conf-pct" id="confPct"></span>
+        </div>
+
+        <div class="prob-row">
+          <div class="prob-chip venomous-chip">
+            <span>Venomous</span>
+            <strong id="vPct"></strong>
+          </div>
+          <div class="prob-chip safe-chip">
+            <span>Safe</span>
+            <strong id="sPct"></strong>
+          </div>
+        </div>
+
+        <div class="warning-box" id="warningBox">
+          <span class="warning-icon" id="warnIcon"></span>
+          <p id="warningText"></p>
+        </div>
+
+        <div class="inference-row" id="inferenceRow"></div>
+
+        <button class="btn btn-outline" id="retryBtn">Analyse Another Snake</button>
+      </div>
+
+      <!-- Error zone -->
+      <div class="error-zone hidden" id="errorZone">
+        <span class="error-icon">⚠️</span>
+        <p id="errorText">Something went wrong. Please try again.</p>
+        <button class="btn btn-outline" id="errorRetryBtn">Try Again</button>
+      </div>
+
+    </div><!-- /.card -->
+
+    <!-- Info strip -->
+    <div class="info-strip">
+      <div class="info-item">
+        <span class="info-icon">🧠</span>
+        <div>
+          <strong>EfficientNetB2</strong>
+          <span>Transfer learning model fine-tuned on 10,000+ snake photos</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">⚡</span>
+        <div>
+          <strong>Instant Results</strong>
+          <span>Analysis completes in under a second</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">📱</span>
+        <div>
+          <strong>Works Everywhere</strong>
+          <span>Mobile camera, gallery, or desktop drag-and-drop</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Disclaimer ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>
+      ⚠️ <strong>Disclaimer:</strong> This tool is for educational purposes only.
+      Never rely solely on AI to determine if a snake is safe.
+      If you encounter a snake, maintain distance and contact local wildlife or medical authorities.
+    </p>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
